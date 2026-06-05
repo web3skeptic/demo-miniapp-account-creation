@@ -6,10 +6,21 @@ Circles host) and exercises the miniapp host bridge:
 - On load it asks the host for wallet state.
 - **Logged in** → shows the connected address.
 - **Not logged in** → shows a **"Create new account"** button that calls
-  `request_create_account`, which makes the host open its account-creation popup.
+  `requestCreateAccount()`, which makes the host open its account-creation popup.
 
-It's plain static HTML/JS — no build, no dependencies — and speaks the same
-postMessage protocol as `@aboutcircles/miniapp-sdk`.
+It's plain static HTML/JS — **no build, no install** — and uses
+[`@aboutcircles/miniapp-sdk`](https://www.npmjs.com/package/@aboutcircles/miniapp-sdk)
+imported straight from a CDN:
+
+```js
+import { onWalletChange, requestCreateAccount, isMiniappMode }
+  from 'https://esm.sh/@aboutcircles/miniapp-sdk@0.1.44';
+```
+
+The `index.html` script tag must be `type="module"` for the import to work. The SDK
+wraps the host's postMessage protocol, so the app never touches `postMessage`
+directly. (Bundled mini apps would `npm add @aboutcircles/miniapp-sdk` and import it
+the same way — see `public/miniapp.js`.)
 
 ## Run
 ```bash
@@ -51,8 +62,29 @@ On `request_create_account` the host (`circles.gnosis.io`):
 So a freshly returned `address` is a **real, registered Circles account** — you can
 read its profile / send transactions right away.
 
-### Minimal raw-postMessage version (no SDK)
-This is what `public/miniapp.js` does:
+### With `@aboutcircles/miniapp-sdk` (what this demo does)
+The SDK wraps the whole protocol — this is all the app needs:
+
+```js
+import { requestCreateAccount, onWalletChange, isMiniappMode } from '@aboutcircles/miniapp-sdk';
+
+// trigger from a user gesture (a click) so the host's passkey prompt is allowed:
+button.addEventListener('click', async () => {
+  try {
+    const { address } = await requestCreateAccount(); // resolves on success, throws on cancel
+    console.log('account ready:', address);           // registered Circles account
+  } catch (e) {
+    console.log('cancelled / failed:', e.message);
+  }
+});
+```
+
+`onWalletChange(cb)` also fires with the new address once the account exists, so a
+login-gated UI can simply react to that instead of awaiting the call directly. See
+`public/miniapp.js` for the full version (it imports the SDK from a CDN — no build).
+
+### Under the hood (raw postMessage, no SDK)
+If you ever need to drop the SDK, the same exchange by hand:
 
 ```js
 function createAccount() {
@@ -69,29 +101,7 @@ function createAccount() {
     window.parent.postMessage({ type: 'request_create_account', requestId }, '*');
   });
 }
-
-// trigger from a user gesture (a click) so the host's passkey prompt is allowed:
-button.addEventListener('click', async () => {
-  try {
-    const address = await createAccount();
-    console.log('account ready:', address); // registered Circles account
-  } catch (e) {
-    console.log('cancelled / failed:', e.message);
-  }
-});
 ```
-
-### With `@aboutcircles/miniapp-sdk` (in a real, bundled miniapp)
-If you're not hand-rolling postMessage, the SDK wraps the same protocol:
-
-```js
-import { requestCreateAccount, onWalletChange, isMiniappMode } from '@aboutcircles/miniapp-sdk';
-
-const { address } = await requestCreateAccount(); // resolves on auth_success, throws on auth_rejected
-```
-
-`onWalletChange(cb)` also fires with the new address once the account exists, so a
-login-gated UI can simply react to that instead of awaiting the call directly.
 
 ### Notes / gotchas
 - **Trigger from a click.** Account creation opens a WebAuthn passkey prompt in the
