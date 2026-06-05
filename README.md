@@ -19,8 +19,22 @@ import { onWalletChange, requestCreateAccount, isMiniappMode }
 
 The `index.html` script tag must be `type="module"` for the import to work. The SDK
 wraps the host's postMessage protocol, so the app never touches `postMessage`
-directly. (Bundled mini apps would `npm add @aboutcircles/miniapp-sdk` and import it
-the same way — see `public/miniapp.js`.)
+directly.
+
+> ⚠️ **This is a demo — don't ship the CDN import.** Pulling the SDK from a CDN link
+> keeps this example zero-build, but a real mini app should **install the package**:
+>
+> ```bash
+> npm add @aboutcircles/miniapp-sdk
+> ```
+> ```js
+> import { requestCreateAccount, onWalletChange } from '@aboutcircles/miniapp-sdk';
+> ```
+>
+> and bundle it (Vite/Rollup/esbuild/etc.). A bare-specifier import gives you a
+> version pinned in `package.json` + lockfile, type checking, tree-shaking, and no
+> hard runtime dependency on a third-party CDN's uptime. The CDN form here is purely
+> so the demo runs with `npx serve` and no toolchain.
 
 ## Run
 ```bash

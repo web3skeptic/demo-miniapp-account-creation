@@ -11,6 +11,11 @@
  *   requestCreateAccount()    → asks the host to open its account-creation popup;
  *                               resolves { authenticated, address } or rejects.
  *   isMiniappMode()           → true when running inside the host iframe.
+ *
+ * ⚠️ DEMO ONLY: importing the SDK from a CDN keeps this example buildless. A real
+ * mini app should `npm add @aboutcircles/miniapp-sdk` and import the bare specifier
+ * (`from '@aboutcircles/miniapp-sdk'`) through a bundler — for a pinned version,
+ * type checking, and no runtime dependency on a third-party CDN.
  */
 import {
 	onWalletChange,
