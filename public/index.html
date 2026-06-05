@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<title>Test Mini App</title>
+		<style>
+			:root {
+				--accent: #7c5cff;
+				--ink: #060a40;
+				--muted: #6a6c8c;
+			}
+			* {
+				box-sizing: border-box;
+			}
+			body {
+				margin: 0;
+				min-height: 100vh;
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+				background: #f0e8dc;
+				color: var(--ink);
+				padding: 24px;
+			}
+			.card {
+				background: #faf5f1;
+				border-radius: 20px;
+				box-shadow: 0 8px 40px rgba(6, 10, 64, 0.12);
+				max-width: 360px;
+				width: 100%;
+				padding: 28px 24px;
+				text-align: center;
+			}
+			h1 {
+				margin: 0 0 6px;
+				font-size: 1.3rem;
+			}
+			.sub {
+				margin: 0 0 20px;
+				color: var(--muted);
+				font-size: 0.9rem;
+			}
+			.state {
+				font-size: 0.85rem;
+				font-weight: 600;
+				padding: 10px 12px;
+				border-radius: 12px;
+				margin-bottom: 16px;
+			}
+			.state.loading {
+				background: #efeae3;
+				color: var(--muted);
+			}
+			.state.out {
+				background: #fff3f3;
+				color: #c0392b;
+			}
+			.state.in {
+				background: #eafaf0;
+				color: #1a8f5a;
+			}
+			.addr {
+				font-family: ui-monospace, Menlo, monospace;
+				font-size: 0.78rem;
+				word-break: break-all;
+			}
+			button {
+				width: 100%;
+				padding: 14px 20px;
+				border: none;
+				border-radius: 12px;
+				background: var(--accent);
+				color: #fff;
+				font-size: 1rem;
+				font-weight: 700;
+				cursor: pointer;
+			}
+			button:disabled {
+				opacity: 0.6;
+				cursor: not-allowed;
+			}
+			.log {
+				margin-top: 18px;
+				text-align: left;
+				font-family: ui-monospace, Menlo, monospace;
+				font-size: 0.72rem;
+				color: var(--muted);
+				background: #f1ece5;
+				border-radius: 10px;
+				padding: 10px 12px;
+				max-height: 140px;
+				overflow: auto;
+				white-space: pre-wrap;
+			}
+			.profile {
+				display: flex;
+				flex-direction: column;
+				align-items: center;
+				gap: 8px;
+				margin-bottom: 16px;
+			}
+			.pfp {
+				width: 72px;
+				height: 72px;
+				border-radius: 50%;
+				object-fit: cover;
+				background: #ede7df;
+			}
+			.pfp-empty {
+				display: flex;
+				align-items: center;
+				justify-content: center;
+				font-size: 32px;
+			}
+			.pname {
+				font-weight: 700;
+				font-size: 1rem;
+			}
+			.muted {
+				color: var(--muted);
+				font-size: 0.85rem;
+			}
+		</style>
+	</head>
+	<body>
+		<div class="card">
+			<h1>🧪 Test Mini App</h1>
+			<p class="sub">Standalone app — checks login via the Circles miniapp host bridge.</p>
+
+			<div id="state" class="state loading">Checking login…</div>
+
+			<div id="profile" class="profile" style="display: none"></div>
+
+			<button id="cta" style="display: none">Create new account</button>
+
+			<div id="log" class="log"></div>
+		</div>
+
+		<script src="./miniapp.js"></script>
+	</body>
+</html>

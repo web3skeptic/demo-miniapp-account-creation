@@ -1,0 +1,9 @@
+{
+  "name": "circles-test-miniapp",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Standalone test mini app — checks login state via the Circles miniapp host bridge and triggers account creation.",
+  "scripts": {
+    "dev": "npx --yes serve public -l 5190 --cors"
+  }
+}
